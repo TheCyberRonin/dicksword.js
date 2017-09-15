@@ -1,0 +1,28 @@
+{
+  "name": "dicksword.js",
+  "version": "0.0.1",
+  "description": "Library for connecting bots to Discord.",
+  "main": "./lib/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheCyberRonin/dicksword.js.git"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "library",
+    "dicksword"
+  ],
+  "author": "cyberronin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TheCyberRonin/dicksword.js/issues"
+  },
+  "homepage": "https://github.com/TheCyberRonin/dicksword.js#readme"
+}
