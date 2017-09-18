@@ -1,6 +1,6 @@
 {
   "name": "dicksword.js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Library for connecting bots to Discord.",
   "main": "./lib/index.js",
   "directories": {
@@ -27,7 +27,6 @@
   "homepage": "https://github.com/TheCyberRonin/dicksword.js#readme",
   "dependencies": {
     "got": "^7.1.0",
-    "ws": "^3.2.0",
-    "zlib": "^1.0.5"
+    "ws": "^3.2.0"
   }
 }
