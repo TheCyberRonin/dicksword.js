@@ -1,12 +1,12 @@
 Any of these will work with sendMessage
 ```js
-sendMessage('message body', { embed: { title: 'Sugoi', description: 'memes' } });
+sendMessage(channelID, 'message body', { embed: { title: 'Sugoi', description: 'memes' } });
 
-sendMessage({ embed: { title: 'Sugoi', description: 'memes' } });
+sendMessage(channelID, { embed: { title: 'Sugoi', description: 'memes' } });
 
-sendMessage({ content: 'message body', embed: { title: 'Sugoi', description: 'memes' } });
+sendMessage(channelID, { content: 'message body', embed: { title: 'Sugoi', description: 'memes' } });
 
-sendMessage('message body');
+sendMessage(channelID, 'message body');
 
-sendMessage({ content: 'message body');
+sendMessage(channelID, { content: 'message body');
 ```
