@@ -5,7 +5,8 @@
 
 [![NPM](https://nodei.co/npm/dicksword.js.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/dicksword.js/)
 
-# Dicksword.js
-Discord Lib for connecting bots to Discord.
-**This lib is WIP!!**
-I would suggest not using it until I get it more stable.
+# Dicksword.js  
+Discord Lib for connecting bots to Discord.  
+**This lib is WIP!!**  
+I would **NOT** recommend using this until is gets more stable.
+This lib is prone to crashes and can have a lot of bugs.
