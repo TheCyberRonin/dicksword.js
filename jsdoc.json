@@ -1,0 +1,9 @@
+{
+  "opts": {
+    "template": "../docdash/"
+  },
+  "templates": {
+    "name": "Dicksword.js",
+    "footerText": "Dicksword.js Documentation"
+  }
+}

@@ -1,4 +1,45 @@
-'use strict';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>index.js - Documentation</title>
+
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a></li><li><a href="Client.html">Client</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="Client.html#cacheOfflineUsers">cacheOfflineUsers</a></li><li data-type='member'><a href="Client.html#channels">channels</a></li><li data-type='member'><a href="Client.html#internals">internals</a></li><li data-type='member'><a href="Client.html#servers">servers</a></li><li data-type='member'><a href="Client.html#users">users</a></li></ul><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Client.html#_APIcall">_APIcall</a></li><li data-type='method'><a href="Client.html#_checkOfflineMembers">_checkOfflineMembers</a></li><li data-type='method'><a href="Client.html#_connect">_connect</a></li><li data-type='method'><a href="Client.html#_getOfflineMembers">_getOfflineMembers</a></li><li data-type='method'><a href="Client.html#_handleIdentify">_handleIdentify</a></li><li data-type='method'><a href="Client.html#_setDirectMessages">_setDirectMessages</a></li><li data-type='method'><a href="Client.html#checkStatus">checkStatus</a></li><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#getAllOfflineMembers">getAllOfflineMembers</a></li><li data-type='method'><a href="Client.html#getGatewayInfo">getGatewayInfo</a></li><li data-type='method'><a href="Client.html#handleDMs">handleDMs</a></li><li data-type='method'><a href="Client.html#handleGuildChunk">handleGuildChunk</a></li><li data-type='method'><a href="Client.html#handleGuilds">handleGuilds</a></li><li data-type='method'><a href="Client.html#handleOauth">handleOauth</a></li><li data-type='method'><a href="Client.html#handleWS">handleWS</a></li><li data-type='method'><a href="Client.html#handleWSClose">handleWSClose</a></li><li data-type='method'><a href="Client.html#init">init</a></li><li data-type='method'><a href="Client.html#processWS">processWS</a></li><li data-type='method'><a href="Client.html#reconnect">reconnect</a></li><li data-type='method'><a href="Client.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="Client.html#setEndpoints">setEndpoints</a></li><li data-type='method'><a href="Client.html#setHeaders">setHeaders</a></li><li data-type='method'><a href="Client.html#setPresence">setPresence</a></li><li data-type='method'><a href="Client.html#wsSend">wsSend</a></li></ul></li><li><a href="Member.html">Member</a></li><li><a href="Message.html">Message</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Message.html#edit">edit</a></li></ul></li><li><a href="Server.html">Server</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Server.html#update">update</a></li></ul></li><li><a href="User.html">User</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="User.html#referenceCount">referenceCount</a></li></ul></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">index.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 
 const WebSocket = require('ws');
 const fs = require('fs');
@@ -62,12 +103,12 @@ class Client extends EventEmitter
     this.servers = {};
     /**
      * Object containing all channels that the bot is a part of, with the keys being channel IDs (Snowflake)
-     * @type {Object<Server>}
+     * @type {Object&lt;Server>}
      */
     this.channels = {};
     /**
      * Object containing all of the users that the bot can see, the keys are the user IDs (Snowflake)
-     * @type {Object<User>}
+     * @type {Object&lt;User>}
      */
     this.users = {};
     this.directMessages = {};
@@ -212,7 +253,7 @@ class Client extends EventEmitter
   }
   /**
    * Gets the gateway info from Discord
-   * @returns {Promise<string>} - Full URL to access the gateway for the websocket connection to Discord
+   * @returns {Promise&lt;string>} - Full URL to access the gateway for the websocket connection to Discord
    */
   getGatewayInfo()
   {
@@ -220,7 +261,7 @@ class Client extends EventEmitter
     {
       this._APIcall('get', this.ENDPOINTS.GATEWAY).then((response) =>
       {
-        resolve(response.body.url + '/?encoding=json&v=' + gateway_version);
+        resolve(response.body.url + '/?encoding=json&amp;v=' + gateway_version);
       }).catch((err) =>
       {
         this.emit('debug', err);
@@ -397,7 +438,7 @@ class Client extends EventEmitter
       this.emit('debug', `READY YEEEE ${JSON.stringify(wsPayload.t)}`);
       this.internals.sessionID = wsData.session_id;
       Object.assign(this, wsData.user);
-      this.inviteURL = `https://discordapp.com/oauth2/authorize?client_id=${this.id}&scope=bot`;
+      this.inviteURL = `https://discordapp.com/oauth2/authorize?client_id=${this.id}&amp;scope=bot`;
       this.handleOauth();
       this.handleGuilds(wsData.guilds);
       this.handleDMs(wsData.private_channels);
@@ -461,7 +502,7 @@ class Client extends EventEmitter
     let userID;
     let arrLen = chunk.members.length;
     this.emit('debug', `${arrLen} Users in offline guild chunk`);
-    for(let i = 0; i < arrLen; i ++)
+    for(let i = 0; i &lt; arrLen; i ++)
     {
       userID = chunk.members[i].user.id;
       if(!server.members[userID]) 
@@ -488,7 +529,7 @@ class Client extends EventEmitter
    * Sends a message to a specified channel
    * @param {string} channelID - ID of the channel you want to send a message to
    * @param {string|object} message - Can be either a string or an object
-   * @returns {Promise<object>} - message response
+   * @returns {Promise&lt;object>} - message response
    */
   sendMessage(channelID, message)
   {
@@ -527,7 +568,7 @@ class Client extends EventEmitter
     Object.keys(this.servers).forEach((serverID) =>
     {
       let server = this.servers[serverID];
-      server.members ? ((Object.keys(server.members).length !== server.member_count) && server.large) ?
+      server.members ? ((Object.keys(server.members).length !== server.member_count) &amp;&amp; server.large) ?
         setTimeout(() => {this._getOfflineMembers(serverID);}, 250)
       : ''
       : '';
@@ -540,7 +581,7 @@ class Client extends EventEmitter
   _checkOfflineMembers(serverID)
   {
     let server = this.servers[serverID];
-    server.members ? ((Object.keys(server.members).length !== server.member_count) && server.large) ?
+    server.members ? ((Object.keys(server.members).length !== server.member_count) &amp;&amp; server.large) ?
       this._getOfflineMembers(serverID)
       : ''
       : '';
@@ -560,7 +601,7 @@ class Client extends EventEmitter
   handleDMs(dmArr)
   {
     let arrLen = dmArr.length;
-    for(let i = 0; i < arrLen; i ++)
+    for(let i = 0; i &lt; arrLen; i ++)
     {
       this.directMessages[dmArr[i].id] = new DirectMessage(dmArr[i]);
     }
@@ -572,7 +613,7 @@ class Client extends EventEmitter
   handleGuilds(guildArr)
   {
     let arrLen = guildArr.length;
-    for(let i = 0; i < arrLen; i++)
+    for(let i = 0; i &lt; arrLen; i++)
     {
       this.servers[guildArr[i].id] = new Server(guildArr[i]);
     }
@@ -612,7 +653,7 @@ class Client extends EventEmitter
    * Handles any API call to Discord
    * @param {string} method - Method to use 
    * @param {string} url - URL for the API to use
-   * @returns {Promise<object>} - Response from the API call
+   * @returns {Promise&lt;object>} - Response from the API call
    */
   _APIcall(method, url)
   {
@@ -655,7 +696,7 @@ class Client extends EventEmitter
   wsSend(data)
   {
     this.emit('debug', `DATA IN SEND ${JSON.stringify(data)}`);
-    if(this.DiscordWebSocket && this.DiscordWebSocket.readyState === 1)
+    if(this.DiscordWebSocket &amp;&amp; this.DiscordWebSocket.readyState === 1)
     {
       this.DiscordWebSocket.send(JSON.stringify(data));
     }
@@ -677,7 +718,7 @@ class Client extends EventEmitter
    */
   _setDirectMessages(DMArray)
   {
-    for(let i = 0; i < DMArray.length; i++)
+    for(let i = 0; i &lt; DMArray.length; i++)
     {
       this.directMessages[[DMArray[i]].id] = new DMChannel();
     }
@@ -738,7 +779,7 @@ class Server extends Base
   {
     this[attrib] = {};
     let arrLen = arr.length;
-    for(let i = 0; i < arrLen; i ++)
+    for(let i = 0; i &lt; arrLen; i ++)
     {
       this[attrib][arr[i].id] = arr[i];
     }
@@ -749,7 +790,7 @@ class Members
   constructor(data, client)
   {
     let len = data.length;
-    for(let i = 0; i < len; i++)
+    for(let i = 0; i &lt; len; i++)
     {
       this[data[i].user.id] = new Member(data[i]);
       client.users[data[i].user.id] ? client.users[data[i].user.id].referenceCount++ : client.users[data[i].user.id] = new User(data[i].user);
@@ -759,7 +800,7 @@ class Members
   update(memberArray, client)
   {
     let len = memberArray.length;
-    for(let i = 0; i < len; i++)
+    for(let i = 0; i &lt; len; i++)
     {
       client.users[data[i].user.id] ?
         client.users[data[i].user.id].update(data[i]) : 
@@ -790,7 +831,7 @@ class Member
   {
     Object.keys(data).forEach((key) =>
     {
-      if(key !== 'user' && key !== 'guild_id')
+      if(key !== 'user' &amp;&amp; key !== 'guild_id')
       {
         this[key] = data[key];
       }
@@ -819,7 +860,7 @@ class Roles
   constructor(data)
   {
     let len = data.length;
-    for(let i = 0; i < len; i ++)
+    for(let i = 0; i &lt; len; i ++)
     {
       this[data[i].id] = data[i];
     }
@@ -857,7 +898,7 @@ class Message
   /**
    * Edits a message to have the desired content
    * @param {Object} content New content to edit the message with
-   * @returns {Promise<Object>}
+   * @returns {Promise&lt;Object>}
    */
   edit(content)
   {
@@ -878,4 +919,23 @@ class Message
   }
 }
 
-module.exports = Client;
+module.exports = Client;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 29 2017 16:55:04 GMT-0400 (EDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+<script src="scripts/collapse.js"></script>
+</body>
+</html>
