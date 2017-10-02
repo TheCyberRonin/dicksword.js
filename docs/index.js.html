@@ -24,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a></li><li><a href="Client.html">Client</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="Client.html#cacheOfflineUsers">cacheOfflineUsers</a></li><li data-type='member'><a href="Client.html#channels">channels</a></li><li data-type='member'><a href="Client.html#internals">internals</a></li><li data-type='member'><a href="Client.html#servers">servers</a></li><li data-type='member'><a href="Client.html#users">users</a></li></ul><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Client.html#_APIcall">_APIcall</a></li><li data-type='method'><a href="Client.html#_checkOfflineMembers">_checkOfflineMembers</a></li><li data-type='method'><a href="Client.html#_connect">_connect</a></li><li data-type='method'><a href="Client.html#_getOfflineMembers">_getOfflineMembers</a></li><li data-type='method'><a href="Client.html#_handleIdentify">_handleIdentify</a></li><li data-type='method'><a href="Client.html#_setDirectMessages">_setDirectMessages</a></li><li data-type='method'><a href="Client.html#checkStatus">checkStatus</a></li><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#getAllOfflineMembers">getAllOfflineMembers</a></li><li data-type='method'><a href="Client.html#getGatewayInfo">getGatewayInfo</a></li><li data-type='method'><a href="Client.html#handleDMs">handleDMs</a></li><li data-type='method'><a href="Client.html#handleGuildChunk">handleGuildChunk</a></li><li data-type='method'><a href="Client.html#handleGuilds">handleGuilds</a></li><li data-type='method'><a href="Client.html#handleOauth">handleOauth</a></li><li data-type='method'><a href="Client.html#handleWS">handleWS</a></li><li data-type='method'><a href="Client.html#handleWSClose">handleWSClose</a></li><li data-type='method'><a href="Client.html#init">init</a></li><li data-type='method'><a href="Client.html#processWS">processWS</a></li><li data-type='method'><a href="Client.html#reconnect">reconnect</a></li><li data-type='method'><a href="Client.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="Client.html#setEndpoints">setEndpoints</a></li><li data-type='method'><a href="Client.html#setHeaders">setHeaders</a></li><li data-type='method'><a href="Client.html#setPresence">setPresence</a></li><li data-type='method'><a href="Client.html#wsSend">wsSend</a></li></ul></li><li><a href="Member.html">Member</a></li><li><a href="Message.html">Message</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Message.html#edit">edit</a></li></ul></li><li><a href="Server.html">Server</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Server.html#update">update</a></li></ul></li><li><a href="User.html">User</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="User.html#referenceCount">referenceCount</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a></li><li><a href="Client.html">Client</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="Client.html#cacheOfflineUsers">cacheOfflineUsers</a></li><li data-type='member'><a href="Client.html#channels">channels</a></li><li data-type='member'><a href="Client.html#internals">internals</a></li><li data-type='member'><a href="Client.html#servers">servers</a></li><li data-type='member'><a href="Client.html#users">users</a></li></ul><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#getAllOfflineMembers">getAllOfflineMembers</a></li><li data-type='method'><a href="Client.html#reconnect">reconnect</a></li><li data-type='method'><a href="Client.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="Client.html#setPresence">setPresence</a></li></ul></li><li><a href="Member.html">Member</a></li><li><a href="Members.html">Members</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Members.html#update">update</a></li></ul></li><li><a href="Message.html">Message</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Message.html#edit">edit</a></li></ul></li><li><a href="Server.html">Server</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Server.html#update">update</a></li></ul></li><li><a href="User.html">User</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="User.html#referenceCount">referenceCount</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -49,7 +49,6 @@ const Zlib = require('zlib');
 const URL = require('url');
 const got = require('got');
 
-
 const CLOSE_CODES = {
   4000: {description: 'Unkown error', explaination: 'We\'re not sure what went wrong. Try reconnecting?'},
   4001: {description: 'Unkown opcode', explaination: 'You sent an invalid Gateway opcode. Don\'t do that!'},
@@ -63,7 +62,6 @@ const CLOSE_CODES = {
   4010: {description: 'Invalid shard', explaination: 'You sent us an invalid shard when identifying.'},
   4011: {description: 'Sharding required', explaination: 'The session would have handled too many guilds - you are required to shard your connection in order to connect.'}
 };
-
 
 /**
  * Constructor for the Client class
@@ -82,7 +80,7 @@ class Client extends EventEmitter
   {
     super();
     if(!settings.token) new Error(`You don't have a token`);
-    settings.status ? this.checkStatus(settings.status): this.status = 'online';
+    settings.status ? this._checkStatus(settings.status): this.status = 'online';
     /**
      * Internal information about the bot
      * @type {Object}
@@ -126,7 +124,7 @@ class Client extends EventEmitter
     };
     this.setPresence = this.setPresence.bind(this);
     this._handleIdentify = this._handleIdentify.bind(this);
-    this.setEndpoints();
+    this._setEndpoints();
     if(settings.autorun)
     {
       this.connect();
@@ -134,9 +132,10 @@ class Client extends EventEmitter
   }
   /**
    * Checks to see if the user entered a valid status to be sent
+   * @private
    * @returns {String} - If valid, returns the status. If invalid, returns online
    */
-  checkStatus(string)
+  _checkStatus(string)
   {
     let acceptable = [
       'online',
@@ -161,7 +160,7 @@ class Client extends EventEmitter
    */
   connect()
   {
-    this.getGatewayInfo().then((gateway) =>
+    this._getGatewayInfo().then((gateway) =>
     {
       this.emit('debug', gateway);
       this.internals.gateway = gateway;
@@ -185,7 +184,7 @@ class Client extends EventEmitter
       }
       else
       {
-        this.handleWSClose(1006);
+        this._handleWSClose(1006);
       }
     },8000);
 
@@ -196,7 +195,7 @@ class Client extends EventEmitter
   setPresence(presence)
   {
     let currentPresence = this.lastPresence;
-    let wsSend = this.wsSend.bind(this);
+    let _wsSend = this._wsSend.bind(this);
     let PAYLOADS = this.PAYLOADS;
     return new Promise((resolve, reject) =>
     {
@@ -205,16 +204,17 @@ class Client extends EventEmitter
         type: presence.game.type ? (presence.game.url ? 1 : 0) : 0,
         url: presence.game.url || null
       };
-      currentPresence.status = presence.status !== undefined ? this.checkStatus(presence.status) : 'online';
-      wsSend(PAYLOADS.STATUS(currentPresence));
+      currentPresence.status = presence.status !== undefined ? this._checkStatus(presence.status) : 'online';
+      _wsSend(PAYLOADS.STATUS(currentPresence));
       resolve(true);
     });
 
   }
   /**
    * Sets the endpoints for accessing Discord
+   * @private
    */
-  setEndpoints()
+  _setEndpoints()
   {
     //set endpoints
     let DiscordAPI = 'https://discordapp.com/api';
@@ -253,9 +253,10 @@ class Client extends EventEmitter
   }
   /**
    * Gets the gateway info from Discord
+   * @private
    * @returns {Promise&lt;string>} - Full URL to access the gateway for the websocket connection to Discord
    */
-  getGatewayInfo()
+  _getGatewayInfo()
   {
     return new Promise((resolve, reject) =>
     {
@@ -271,6 +272,7 @@ class Client extends EventEmitter
   }
   /**
    * Connects to Discod via websocket
+   * @private
    * @param {string} gateway - URL for connecting to Discord via websocket
    */
   _connect(gateway)
@@ -278,15 +280,16 @@ class Client extends EventEmitter
     this.init();
     this.DiscordWebSocket = new WebSocket(gateway);
     //handle close on close, and error
-    this.DiscordWebSocket.once('close', this.handleWSClose.bind(this));
-    this.DiscordWebSocket.once('error', this.handleWSClose.bind(this));
-    this.DiscordWebSocket.on('message', this.handleWS.bind(this));
+    this.DiscordWebSocket.once('close', this._handleWSClose.bind(this));
+    this.DiscordWebSocket.once('error', this._handleWSClose.bind(this));
+    this.DiscordWebSocket.on('message', this._handleWS.bind(this));
   }
   /**
    * Sets the headers for API calls to Discord
+   * @private
    * @returns {object}
    */
-  setHeaders()
+  _setHeaders()
   {
     return {
       'accept': '*/*',
@@ -299,6 +302,7 @@ class Client extends EventEmitter
   }
   /**
    * Initializes some internals and creates the payloads to send to Discord
+   * @private
    */
   init()
   {
@@ -403,13 +407,14 @@ class Client extends EventEmitter
   }
   /**
    * Handles the payloads from the websocket connection
+   * @private
    * @param {object} data - payload from the websocket connection 
    */
-  handleWS(data)
+  _handleWS(data)
   {
-    let wsPayload = this.processWS(data);
+    let wsPayload = this._processWS(data);
     //debug
-    this.emit('debug', `wsPayload in handleWS ${JSON.stringify(wsPayload)}`);
+    this.emit('debug', `wsPayload in _handleWS ${JSON.stringify(wsPayload)}`);
     let wsData = wsPayload.d;
     wsPayload.op !== 11 ? this.internals.sequence = wsPayload.s : '';
 
@@ -420,7 +425,7 @@ class Client extends EventEmitter
       this._keepAlive = setInterval(() =>
       {
         this.internals._lastHB = Date.now();
-        this.wsSend(this.PAYLOADS.HEARTBEAT());
+        this._wsSend(this.PAYLOADS.HEARTBEAT());
       }, wsData.heartbeat_interval);
       break;
     case 11:
@@ -439,9 +444,9 @@ class Client extends EventEmitter
       this.internals.sessionID = wsData.session_id;
       Object.assign(this, wsData.user);
       this.inviteURL = `https://discordapp.com/oauth2/authorize?client_id=${this.id}&amp;scope=bot`;
-      this.handleOauth();
-      this.handleGuilds(wsData.guilds);
-      this.handleDMs(wsData.private_channels);
+      this._handleOauth();
+      this._handleGuilds(wsData.guilds);
+      this._handleDMs(wsData.private_channels);
       this.emit('ready');
       break;
     case 'MESSAGE_CREATE':
@@ -480,22 +485,23 @@ class Client extends EventEmitter
       this.emit('guildMemberUpdate', wsData);
       break;
     case 'RECONNECT':
-      this.handleWSClose(1006);
+      this._handleWSClose(1006);
       break;
     case 'GATEWAY_INVALID_SESSION':
       !wsData ? this.internals.sessionID = null : '';
-      this.handleWSClose(1006);
+      this._handleWSClose(1006);
       break;
     case 'GUILD_MEMBERS_CHUNK':
-      this.handleGuildChunk(wsData);
+      this._handleGuildChunk(wsData);
       break;
     }
   }
   /**
    * Handles the chunk of users and will cache them appropriately in the guild and cached users
+   * @private
    * @param {Object} chunk - Guild chunk from Discord docs 
    */
-  handleGuildChunk(chunk)
+  _handleGuildChunk(chunk)
   {
     let server = this.servers[chunk.guild_id];
     let users = this.users;
@@ -514,8 +520,9 @@ class Client extends EventEmitter
   }
   /**
    * Gets the Oauth information associated with the bot
+   * @private
    */
-  handleOauth()
+  _handleOauth()
   {
     this._APIcall('get', this.ENDPOINTS.OAUTH).then((oauth) =>
     {
@@ -576,6 +583,7 @@ class Client extends EventEmitter
   }
   /**
    * Internal helper for checking offline users, will check to see if you need ot check for offline members
+   * @private
    * @param {String} serverID 
    */
   _checkOfflineMembers(serverID)
@@ -588,17 +596,19 @@ class Client extends EventEmitter
   }
   /**
    * Internal helper for checking offline users, this sends the actual request
+   * @private
    * @param {String} serverID 
    */
   _getOfflineMembers(serverID)
   {
-    this.wsSend(this.PAYLOADS.REQUEST_OFFLINE_MEMBERS(serverID));
+    this._wsSend(this.PAYLOADS.REQUEST_OFFLINE_MEMBERS(serverID));
   }
   /**
    * Handles the DMs from a READY payload
+   * @private
    * @param {array} dmArr - Array of DM channels
    */
-  handleDMs(dmArr)
+  _handleDMs(dmArr)
   {
     let arrLen = dmArr.length;
     for(let i = 0; i &lt; arrLen; i ++)
@@ -608,9 +618,10 @@ class Client extends EventEmitter
   }
   /**
    * Handles the guilds from the READY payload
+   * @private
    * @param {array} guildArr 
    */
-  handleGuilds(guildArr)
+  _handleGuilds(guildArr)
   {
     let arrLen = guildArr.length;
     for(let i = 0; i &lt; arrLen; i++)
@@ -620,10 +631,11 @@ class Client extends EventEmitter
   }
   /**
    * Handles the closing of the websocket connection
+   * @private
    * @param {number} code - Error code 
    * @param {object} data - Data provided
    */
-  handleWSClose(code, data)
+  _handleWSClose(code, data)
   {
     let errMessage = CLOSE_CODES[code] !== undefined ? CLOSE_CODES[code].description : 'Unkown';
     this.emit('debug', `Data in wsClose ${data}`);
@@ -637,12 +649,12 @@ class Client extends EventEmitter
     this.DiscordWebSocket = null;
     if(code === (1006 || 1001))
     {
-      this.emit('debug', `${code} in err check for handleWSClose`);
+      this.emit('debug', `${code} in err check for _handleWSClose`);
       return this.reconnect();
     }
     else if(code === 1000)
     {
-      this.emit('debug', `${code} in err check for handleWSClose`);
+      this.emit('debug', `${code} in err check for _handleWSClose`);
       this.internals.sessionID = null;
       return this.reconnect();
     }
@@ -651,6 +663,7 @@ class Client extends EventEmitter
   }
   /**
    * Handles any API call to Discord
+   * @private
    * @param {string} method - Method to use 
    * @param {string} url - URL for the API to use
    * @returns {Promise&lt;object>} - Response from the API call
@@ -662,7 +675,7 @@ class Client extends EventEmitter
       let data = arguments[2] !== undefined ? arguments[2] : undefined, req, callOptions;
       callOptions = URL.parse(url);
       callOptions.method = method.toUpperCase();
-      callOptions.headers = this.setHeaders();
+      callOptions.headers = this._setHeaders();
       callOptions.json = true;
       callOptions.retries = 2;
       if(data)
@@ -683,17 +696,19 @@ class Client extends EventEmitter
   }
   /**
    * Handles a payload from a websocket message
+   * @private
    * @param {object} message - Payload from a websocket message
    */
-  processWS(message)
+  _processWS(message)
   {
     return message instanceof Buffer ? JSON.parse(Zlib.inflateSync(message).toString()) : JSON.parse(message);
   }
   /**
    * Sends data through the websocket
+   * @private
    * @param {object} data - Data to send 
    */
-  wsSend(data)
+  _wsSend(data)
   {
     this.emit('debug', `DATA IN SEND ${JSON.stringify(data)}`);
     if(this.DiscordWebSocket &amp;&amp; this.DiscordWebSocket.readyState === 1)
@@ -703,6 +718,7 @@ class Client extends EventEmitter
   }
   /**
    * Decides whether or not to resume or identify to Discord
+   * @private
    */
   _handleIdentify()
   {
@@ -710,10 +726,11 @@ class Client extends EventEmitter
     let internals = this.internals;
   
     this.emit('debug', `In _handleIdentify ${JSON.stringify(internals.sessionID ? PAYLOADS.RESUME : PAYLOADS.IDENTIFY)}`);
-    return this.wsSend(internals.sessionID ? PAYLOADS.RESUME : PAYLOADS.IDENTIFY);
+    return this._wsSend(internals.sessionID ? PAYLOADS.RESUME : PAYLOADS.IDENTIFY);
   }
   /**
    * Sets the directMessages of the client
+   * @private
    * @param {array} DMArray - Arrays of DMs to set
    */
   _setDirectMessages(DMArray)
@@ -757,7 +774,9 @@ class Base
   }
 }
 /**
- * 
+ * Server class containing pertinent information about a server
+ * @param {Object} data Raw server data from the websocket
+ * @param {Client} client Client obj
  */
 class Server extends Base
 {
@@ -775,6 +794,12 @@ class Server extends Base
   {
     this.merge(data);
   }
+  /**
+   * Testing function for processing Array stuffs
+   * @private
+   * @param {Array} arr 
+   * @param {String} attrib 
+   */
   _processArr(arr, attrib)
   {
     this[attrib] = {};
@@ -785,6 +810,11 @@ class Server extends Base
     }
   }
 }
+/**
+ * Container for Member objects
+ * @param {Array} data Raw data from the websocket (Array of Discord Member objects)
+ * @param {Client} client Client object
+ */
 class Members
 {
   constructor(data, client)
@@ -797,6 +827,11 @@ class Members
       
     }
   }
+  /**
+   * 
+   * @param {Array} memberArray Array of members belonging to a certain server 
+   * @param {Client} client Client object
+   */
   update(memberArray, client)
   {
     let len = memberArray.length;
@@ -931,7 +966,7 @@ module.exports = Client;</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Sep 29 2017 16:55:04 GMT-0400 (EDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 01 2017 22:21:31 GMT-0400 (EDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
