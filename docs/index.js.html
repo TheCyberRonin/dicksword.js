@@ -24,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a></li><li><a href="Client.html">Client</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="Client.html#cacheOfflineUsers">cacheOfflineUsers</a></li><li data-type='member'><a href="Client.html#channels">channels</a></li><li data-type='member'><a href="Client.html#internals">internals</a></li><li data-type='member'><a href="Client.html#servers">servers</a></li><li data-type='member'><a href="Client.html#users">users</a></li></ul><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#getAllOfflineMembers">getAllOfflineMembers</a></li><li data-type='method'><a href="Client.html#reconnect">reconnect</a></li><li data-type='method'><a href="Client.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="Client.html#setPresence">setPresence</a></li></ul></li><li><a href="Member.html">Member</a></li><li><a href="Members.html">Members</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Members.html#update">update</a></li></ul></li><li><a href="Message.html">Message</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Message.html#edit">edit</a></li></ul></li><li><a href="Server.html">Server</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Server.html#update">update</a></li></ul></li><li><a href="User.html">User</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="User.html#referenceCount">referenceCount</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a></li><li><a href="Channel.html">Channel</a></li><li><a href="Client.html">Client</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="Client.html#cacheOfflineUsers">cacheOfflineUsers</a></li><li data-type='member'><a href="Client.html#channels">channels</a></li><li data-type='member'><a href="Client.html#internals">internals</a></li><li data-type='member'><a href="Client.html#servers">servers</a></li><li data-type='member'><a href="Client.html#users">users</a></li></ul><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#getAllOfflineMembers">getAllOfflineMembers</a></li><li data-type='method'><a href="Client.html#reconnect">reconnect</a></li><li data-type='method'><a href="Client.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="Client.html#setPresence">setPresence</a></li></ul></li><li><a href="Member.html">Member</a></li><li><a href="Members.html">Members</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Members.html#update">update</a></li></ul></li><li><a href="Message.html">Message</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Message.html#edit">edit</a></li></ul></li><li><a href="Server.html">Server</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Server.html#update">update</a></li></ul></li><li><a href="User.html">User</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="User.html#referenceCount">referenceCount</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -40,7 +40,6 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
-
 const WebSocket = require('ws');
 const fs = require('fs');
 const gateway_version = '6';
@@ -422,6 +421,7 @@ class Client extends EventEmitter
     {
     case 10:
       this._handleIdentify();
+      this.internals.trace = wsData._trace;
       this._keepAlive = setInterval(() =>
       {
         this.internals._lastHB = Date.now();
@@ -432,6 +432,13 @@ class Client extends EventEmitter
       this.ping = (Date.now() - this.internals._lastHB);
       //debug
       this.emit('debug', `IN HB: ~~~~ ${Date.now() - this.internals._lastHB}`);
+      break;
+    case 9:
+      !wsData ? this.internals.sessionID = null : '';
+      this._handleWSClose(1006);
+      break;
+    case 7:
+      this._handleWSClose(1006);
       break;
     }
 
@@ -446,16 +453,48 @@ class Client extends EventEmitter
       this.inviteURL = `https://discordapp.com/oauth2/authorize?client_id=${this.id}&amp;scope=bot`;
       this._handleOauth();
       this._handleGuilds(wsData.guilds);
-      this._handleDMs(wsData.private_channels);
       this.emit('ready');
       break;
     case 'MESSAGE_CREATE':
       this.emit('message', new Message(wsData, this));
       break;
+    case 'CHANNEL_CREATE':
+      wsData.guild_id ? 
+      this.servers[wsData.guild_id].channels[wsData.id] = new Channel(wsData) :
+      this.directMessages[wsData.id] = new Channel(wsData);
+      this.channels[wsData.id] = new Channel(wsData);
+      this.emit('channelCreate', new Channel(wsData));
+      break;
+    case 'CHANNEL_UPDATE':
+      wsData.guild_id ? 
+      this.servers[wsData.guild_id].channels[wsData.id] = new Channel(wsData) :
+      this.directMessages[wsData.id] = new Channel(wsData);
+      this.channels[wsData.id] = new Channel(wsData);
+      this.emit('channelUpdate', new Channel(wsData));
+      break;
+    case 'CHANNEL_DELETE':
+      delete this.servers[wsData.guild_id].channels[wsData.id];
+      delete this.channels[wsData.id];
+      this.emit('channelDelete', new Channel(wsData));
+      break;
     case 'GUILD_CREATE':
       this.servers[wsData.id] = new Server(wsData, this);
       this.cacheOfflineUsers ? this._checkOfflineMembers(wsData.id) : '';
       this.emit('guildCreate', this.servers[wsData.id]);
+      break;
+    case 'GUILD_DELETE':
+      if(wsData.unavailable)
+      {
+        this.servers[wsData.id] = new Server(wsData, this);
+        this.emit('guildUnavailable', new Server(wsData, this));
+      }
+      else
+      {
+        let deleted = this.servers[wsData.id];
+        this._handleGuildRemove(deleted.members);
+        delete this.servers[wsData.id];
+        this.emit('guildDelete', deleted);
+      } 
       break;
     case 'GUILD_ROLE_UPDATE':
       this.servers[wsData.guild_id].roles[wsData.role.id] = wsData.role;
@@ -468,15 +507,22 @@ class Client extends EventEmitter
       this.emit('guildMemberAdd', this.servers[wsData.guild_id].members[wsData.user.id]);
       break;
     case 'GUILD_MEMBER_REMOVE':
-      delete(this.servers[wsData.guild_id].members[wsData.user.id]);
-      this.servers[wsData.guild_id].member_count --;
-      if(this.users[wsData.user.id])
+      if(this.servers[wsData.guild_id])
       {
-        this.users[wsData.user.id].referenceCount --;
-        if(this.users[wsData.user.id].referenceCount === 0)
+        delete(this.servers[wsData.guild_id].members[wsData.user.id]);
+        this.servers[wsData.guild_id].member_count --;
+        if(this.users[wsData.user.id])
         {
-          delete(this.users[wsData.user.id]);
+          this.users[wsData.user.id].referenceCount --;
+          if(this.users[wsData.user.id].referenceCount === 0)
+          {
+            delete(this.users[wsData.user.id]);
+          }
         }
+      }
+      else
+      {
+        console.log(`Server ID: ${wsData.guild_id}, user ID: ${wsData.user.id}`);
       }
       this.emit('guildMemberRemove', wsData);
       break;
@@ -484,17 +530,24 @@ class Client extends EventEmitter
       this.servers[wsData.guild_id].members[wsData.user.id].update(wsData, this);
       this.emit('guildMemberUpdate', wsData);
       break;
-    case 'RECONNECT':
-      this._handleWSClose(1006);
-      break;
-    case 'GATEWAY_INVALID_SESSION':
-      !wsData ? this.internals.sessionID = null : '';
-      this._handleWSClose(1006);
-      break;
     case 'GUILD_MEMBERS_CHUNK':
       this._handleGuildChunk(wsData);
       break;
     }
+  }
+  _handleGuildRemove(members)
+  {
+    Object.keys(members).forEach((key) =>
+    {
+      if(this.users[key])
+      {
+        this.users[key].referenceCount --;
+        if(this.users[key].referenceCount === 0)
+        {
+          delete(this.users[key]);
+        }
+      }
+    })
   }
   /**
    * Handles the chunk of users and will cache them appropriately in the guild and cached users
@@ -548,6 +601,10 @@ class Client extends EventEmitter
         messageObj.content = message;
         messageObj.embed = arguments[2] ? arguments[2].embed : {};
       }
+      else if(message === undefined)
+      {
+        reject('Cannot send message: No message or embed in sendMessage.');
+      }
       else
       {
         messageObj.content = message.content  !== undefined ? message.content : '';
@@ -557,10 +614,7 @@ class Client extends EventEmitter
       this._APIcall('post', this.ENDPOINTS.MESSAGES(channelID), messageObj).then((result) =>
       {
         resolve(new Message(result.body, this));
-      }).catch((err) =>
-      {
-        reject(err);
-      });
+      }).catch(reject);
     }); 
   }
   /**
@@ -602,19 +656,6 @@ class Client extends EventEmitter
   _getOfflineMembers(serverID)
   {
     this._wsSend(this.PAYLOADS.REQUEST_OFFLINE_MEMBERS(serverID));
-  }
-  /**
-   * Handles the DMs from a READY payload
-   * @private
-   * @param {array} dmArr - Array of DM channels
-   */
-  _handleDMs(dmArr)
-  {
-    let arrLen = dmArr.length;
-    for(let i = 0; i &lt; arrLen; i ++)
-    {
-      this.directMessages[dmArr[i].id] = new DirectMessage(dmArr[i]);
-    }
   }
   /**
    * Handles the guilds from the READY payload
@@ -737,7 +778,7 @@ class Client extends EventEmitter
   {
     for(let i = 0; i &lt; DMArray.length; i++)
     {
-      this.directMessages[[DMArray[i]].id] = new DMChannel();
+      this.directMessages[[DMArray[i]].id] = new Channel();
     }
   }
 }
@@ -765,7 +806,6 @@ class Base
             this[attrib] = obj2[attrib];
           }
         });
-  
         return this;
       },
       enumerable: false
@@ -785,6 +825,7 @@ class Server extends Base
     super(data);
     data.roles ? this.roles  = new Roles(data.roles): '';
     data.members ? this.members = new Members(data.members, client) : '';
+    data.channels ? this.channels = new Channels(data.channels, client, this.id) : '';
   }
   /**
    * Updates a Server based on information receieved from the websocket
@@ -824,7 +865,6 @@ class Members
     {
       this[data[i].user.id] = new Member(data[i]);
       client.users[data[i].user.id] ? client.users[data[i].user.id].referenceCount++ : client.users[data[i].user.id] = new User(data[i].user);
-      
     }
   }
   /**
@@ -876,18 +916,30 @@ class Member
     this.discriminator = data.user.discriminator;
   }
 }
+/**
+ * Contains information pertaining to a channel
+ * @param {Object} data Raw channel data from the websocket
+ */
 class Channel extends Base
 {
-  constructor(data)
+  constructor(data, guild_id)
   {
     super(data);
+    data.permission_overwrites ? this.permission_overwrites = data.permission_overwrites: '';
+    data.recipients ? this.recipients = data.recipients : '';
+    guild_id ? this.guild_id = guild_id : '';
   }
 }
-class DirectMessage extends Channel
+class Channels
 {
-  constructor(data)
+  constructor(data, client, guild_id)
   {
-    super(data);
+    let len = data.length;
+    for(let i = 0; i &lt; len; i ++)
+    {
+      this[data[i].id] = new Channel(data[i], guild_id);
+      client.channels[data[i].id] = new Channel(data[i], guild_id);
+    }
   }
 }
 class Roles
@@ -946,10 +998,7 @@ class Message
       return this._client._APIcall('patch', this._client.ENDPOINTS.MESSAGES(this.channel_id, this.id), newContent).then((result) =>
       {
         resolve(result);
-      }).catch((err) =>
-      {
-        reject(err);
-      });
+      }).catch(reject);
     });
   }
 }
@@ -966,7 +1015,7 @@ module.exports = Client;</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Sun Oct 01 2017 22:21:31 GMT-0400 (EDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Oct 23 2017 18:07:12 GMT-0400 (EDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

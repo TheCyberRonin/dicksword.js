@@ -1,13 +1,14 @@
 {
   "name": "dicksword.js",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Library for connecting bots to Discord.",
   "main": "./lib/index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": ""
   },
   "repository": {
     "type": "git",
