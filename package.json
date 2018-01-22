@@ -1,6 +1,6 @@
 {
   "name": "dicksword.js",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "typings": "./typings/index.d.ts",
   "description": "Library for connecting bots to Discord.",
   "main": "./lib/index.js",
