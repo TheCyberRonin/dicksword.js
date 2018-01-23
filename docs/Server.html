@@ -24,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a></li><li><a href="Channel.html">Channel</a></li><li><a href="Client.html">Client</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="Client.html#cacheOfflineUsers">cacheOfflineUsers</a></li><li data-type='member'><a href="Client.html#channels">channels</a></li><li data-type='member'><a href="Client.html#internals">internals</a></li><li data-type='member'><a href="Client.html#servers">servers</a></li><li data-type='member'><a href="Client.html#users">users</a></li></ul><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#getAllOfflineMembers">getAllOfflineMembers</a></li><li data-type='method'><a href="Client.html#reconnect">reconnect</a></li><li data-type='method'><a href="Client.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="Client.html#setPresence">setPresence</a></li></ul></li><li><a href="Member.html">Member</a></li><li><a href="Members.html">Members</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Members.html#update">update</a></li></ul></li><li><a href="Message.html">Message</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Message.html#edit">edit</a></li></ul></li><li><a href="Server.html">Server</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Server.html#update">update</a></li></ul></li><li><a href="User.html">User</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="User.html#referenceCount">referenceCount</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a></li><li><a href="Channel.html">Channel</a></li><li><a href="Client.html">Client</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="Client.html#cacheOfflineUsers">cacheOfflineUsers</a></li><li data-type='member'><a href="Client.html#channels">channels</a></li><li data-type='member'><a href="Client.html#internals">internals</a></li><li data-type='member'><a href="Client.html#servers">servers</a></li><li data-type='member'><a href="Client.html#users">users</a></li></ul><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#editInfo">editInfo</a></li><li data-type='method'><a href="Client.html#getAllOfflineMembers">getAllOfflineMembers</a></li><li data-type='method'><a href="Client.html#getBotInvite">getBotInvite</a></li><li data-type='method'><a href="Client.html#reconnect">reconnect</a></li><li data-type='method'><a href="Client.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="Client.html#setPresence">setPresence</a></li></ul></li><li><a href="Emoji.html">Emoji</a></li><li><a href="Member.html">Member</a></li><li><a href="Members.html">Members</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Members.html#update">update</a></li></ul></li><li><a href="Message.html">Message</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Message.html#cancelReact">cancelReact</a></li><li data-type='method'><a href="Message.html#deleteReact">deleteReact</a></li><li data-type='method'><a href="Message.html#edit">edit</a></li><li data-type='method'><a href="Message.html#getReacts">getReacts</a></li><li data-type='method'><a href="Message.html#react">react</a></li></ul></li><li><a href="Role.html">Role</a></li><li><a href="Server.html">Server</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Server.html#addRole">addRole</a></li><li data-type='method'><a href="Server.html#update">update</a></li></ul></li><li><a href="User.html">User</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="User.html#referenceCount">referenceCount</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -71,7 +71,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line780">line 780</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line849">line 849</a>
     </li></ul></dd>
     
 
@@ -229,6 +229,379 @@
 
     
 
+    <h4 class="name" id="addRole"><span class="type-signature"></span>addRole<span class="signature">(roleData<span class="signature-attributes">opt</span>)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line870">line 870</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    Creates a new role on the server
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>server.addRole({name:'Example role', hoist: true, color: 13395711});</code></pre>
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>roleData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">Data for a role
+                <h6>Properties</h6>
+                
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>'new role'</code>
+                
+                </td>
+            
+
+            <td class="description last">Name of the role</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>permissions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">int</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last">Permissions to set for the role, defaults to "@everyone permissions of server"</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>color</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">color</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>0</code>
+                
+                </td>
+            
+
+            <td class="description last">RGB color value for the role</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>hoist</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last">Whether or not the role is shown separately on the member list</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>mentionable</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    <code>false</code>
+                
+                </td>
+            
+
+            <td class="description last">Whether or not the role is mentionable</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="update"><span class="type-signature"></span>update<span class="signature">(data)</span><span class="type-signature"></span></h4>
 
     
@@ -241,7 +614,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line793">line 793</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line884">line 884</a>
     </li></ul></dd>
     
 
@@ -375,7 +748,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Oct 23 2017 18:07:12 GMT-0400 (EDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jan 12 2018 11:48:04 GMT-0500 (Eastern Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

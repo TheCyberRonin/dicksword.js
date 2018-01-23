@@ -24,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a></li><li><a href="Channel.html">Channel</a></li><li><a href="Client.html">Client</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="Client.html#cacheOfflineUsers">cacheOfflineUsers</a></li><li data-type='member'><a href="Client.html#channels">channels</a></li><li data-type='member'><a href="Client.html#internals">internals</a></li><li data-type='member'><a href="Client.html#servers">servers</a></li><li data-type='member'><a href="Client.html#users">users</a></li></ul><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#getAllOfflineMembers">getAllOfflineMembers</a></li><li data-type='method'><a href="Client.html#reconnect">reconnect</a></li><li data-type='method'><a href="Client.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="Client.html#setPresence">setPresence</a></li></ul></li><li><a href="Member.html">Member</a></li><li><a href="Members.html">Members</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Members.html#update">update</a></li></ul></li><li><a href="Message.html">Message</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Message.html#edit">edit</a></li></ul></li><li><a href="Server.html">Server</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Server.html#update">update</a></li></ul></li><li><a href="User.html">User</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="User.html#referenceCount">referenceCount</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a></li><li><a href="Channel.html">Channel</a></li><li><a href="Client.html">Client</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="Client.html#cacheOfflineUsers">cacheOfflineUsers</a></li><li data-type='member'><a href="Client.html#channels">channels</a></li><li data-type='member'><a href="Client.html#internals">internals</a></li><li data-type='member'><a href="Client.html#servers">servers</a></li><li data-type='member'><a href="Client.html#users">users</a></li></ul><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#editInfo">editInfo</a></li><li data-type='method'><a href="Client.html#getAllOfflineMembers">getAllOfflineMembers</a></li><li data-type='method'><a href="Client.html#getBotInvite">getBotInvite</a></li><li data-type='method'><a href="Client.html#reconnect">reconnect</a></li><li data-type='method'><a href="Client.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="Client.html#setPresence">setPresence</a></li></ul></li><li><a href="Emoji.html">Emoji</a></li><li><a href="Member.html">Member</a></li><li><a href="Members.html">Members</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Members.html#update">update</a></li></ul></li><li><a href="Message.html">Message</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Message.html#cancelReact">cancelReact</a></li><li data-type='method'><a href="Message.html#deleteReact">deleteReact</a></li><li data-type='method'><a href="Message.html#edit">edit</a></li><li data-type='method'><a href="Message.html#getReacts">getReacts</a></li><li data-type='method'><a href="Message.html#react">react</a></li></ul></li><li><a href="Role.html">Role</a></li><li><a href="Server.html">Server</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Server.html#addRole">addRole</a></li><li data-type='method'><a href="Server.html#update">update</a></li></ul></li><li><a href="User.html">User</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="User.html#referenceCount">referenceCount</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -116,7 +116,8 @@ class Client extends EventEmitter
       game: settings.game ? 
       {
         name: settings.game.name,
-        type: settings.game.type || settings.game.url ? 1 : 0, url: settings.game.url || null
+        type: settings.game.type ? settings.game.type : 0, 
+        url: settings.game.url || null
       } : {},
       status: this.status,
       afk: false
@@ -129,87 +130,11 @@ class Client extends EventEmitter
       this.connect();
     }
   }
-  /**
-   * Checks to see if the user entered a valid status to be sent
-   * @private
-   * @returns {String} - If valid, returns the status. If invalid, returns online
-   */
-  _checkStatus(string)
+  get [Symbol.toStringTag]()
   {
-    let acceptable = [
-      'online',
-      'dnd',
-      'idle',
-      'invisible',
-      'offline'
-    ];
-    if(acceptable.indexOf(string) !== -1)
-    {
-      this.status = string;
-      return(string);
-    }
-    else
-    {
-      this.status = 'online';
-      return('online');
-    }
+    return 'Client';
   }
-  /**
-   * Handles connecting to Discord via websocket
-   */
-  connect()
-  {
-    this._getGatewayInfo().then((gateway) =>
-    {
-      this.emit('debug', gateway);
-      this.internals.gateway = gateway;
-      this._connect(gateway);
-    }).catch((err) =>
-    {
-      this.reconnect();
-      return this.emit('debug', 'Error getting gateway: ' + err);
-    });
-  }
-  /**
-   * Handles reconnecting to the websocket (this is what should be called in the client if you want to reconnect)
-   */
-  reconnect()
-  {
-    setTimeout(() =>
-    {
-      if(!this.DiscordWebSocket)
-      {
-        setTimeout(() => {this.connect();}, 3000);
-      }
-      else
-      {
-        this._handleWSClose(1006);
-      }
-    },8000);
-
-  }
-  /**
-   * Sets the presence of the bot
-   */
-  setPresence(presence)
-  {
-    let currentPresence = this.lastPresence;
-    let _wsSend = this._wsSend.bind(this);
-    let PAYLOADS = this.PAYLOADS;
-    return new Promise((resolve, reject) =>
-    {
-      currentPresence.game = {
-        name: presence.game.name ? presence.game.name : reject('The object needs a name member.'),
-        type: presence.game.type ? (presence.game.url ? 1 : 0) : 0,
-        url: presence.game.url || null
-      };
-      currentPresence.status = presence.status !== undefined ? this._checkStatus(presence.status) : 'online';
-      _wsSend(PAYLOADS.STATUS(currentPresence));
-      resolve(true);
-    });
-
-  }
-  /**
+    /**
    * Sets the endpoints for accessing Discord
    * @private
    */
@@ -241,7 +166,7 @@ class Client extends EventEmitter
       MESSAGES: (channelID, messageID) => {return `${this.ENDPOINTS.CHANNEL(channelID)}/messages${messageID ? '/' + messageID : ''}`;},
       PINNED_MESSAGES: (channelID, messageID) => {return `${this.ENDPOINTS.CHANNEL(channelID)}/pins${messageID ? '/' + messageID : ''}`;},
       MESSAGE_REACTIONS: (channelID, messageID, reaction) => {return `${this.ENDPOINTS.MESSAGES(channelID, messageID)}/reactions${reaction ? '/' + reaction : ''}`;},
-      USER_REACTIONS: (channelID, messageID, reaction, userID) => {return `${this.ENDPOINTS.MESSAGE_REACTIONS(cannelID, messageID, reaction)}/${!userID || userID === this.id ? '@me' : userID}`;},
+      USER_REACTIONS: (channelID, messageID, reaction, userID) => {return `${this.ENDPOINTS.MESSAGE_REACTIONS(channelID, messageID, reaction)}/${!userID || userID === this.id ? '@me' : userID}`;},
       INVITES: (inviteCode) => {return DiscordAPI + '/invite' + inviteCode;},
       SERVER_WEBHOOKS: (serverID) => {return `${this.ENDPOINTS.SERVERS(serverID)}/webhooks`;},
       CHANNEL_WEBHOOKS: (channelID) => {return `${this.ENDPOINTS.CHANNEL(channelID)}/webhooks`;},
@@ -300,6 +225,448 @@ class Client extends EventEmitter
     };
   }
   /**
+   * Checks to see if the user entered a valid status to be sent
+   * @private
+   * @returns {String} - If valid, returns the status. If invalid, returns online
+   */
+  _checkStatus(string)
+  {
+    let acceptable = [
+      'online',
+      'dnd',
+      'idle',
+      'invisible',
+      'offline'
+    ];
+    if(acceptable.indexOf(string) !== -1)
+    {
+      this.status = string;
+      return(string);
+    }
+    else
+    {
+      this.status = 'online';
+      return('online');
+    }
+  }
+    /**
+   * Handles the payloads from the websocket connection
+   * @private
+   * @param {object} data - payload from the websocket connection 
+   */
+  _handleWS(data)
+  {
+    let wsPayload = this._processWS(data);
+    //debug
+    this.emit('debug', `wsPayload in _handleWS ${JSON.stringify(wsPayload)}`);
+    let wsData = wsPayload.d;
+    wsPayload.op !== 11 ? this.internals.sequence = wsPayload.s : '';
+
+    switch(wsPayload.op)
+    {
+    case 10:
+      this._handleIdentify();
+      this.internals.trace = wsData._trace;
+      this._keepAlive = setInterval(() =>
+      {
+        this.internals._lastHB = Date.now();
+        this._wsSend(this.PAYLOADS.HEARTBEAT());
+      }, wsData.heartbeat_interval);
+      break;
+    case 11:
+      this.ping = (Date.now() - this.internals._lastHB);
+      //debug
+      this.emit('debug', `IN HB: ~~~~ ${Date.now() - this.internals._lastHB}`);
+      break;
+    case 9:
+      !wsData ? this.internals.sessionID = null : '';
+      this._handleWSClose(1006);
+      break;
+    case 7:
+      this._handleWSClose(1006);
+      break;
+    }
+
+    this.emit('any', wsPayload);
+    switch(wsPayload.t)
+    {
+    case 'READY':
+      //debug
+      this.emit('debug', `READY YEEEE ${JSON.stringify(wsPayload.t)}`);
+      this.internals.sessionID = wsData.session_id;
+      Object.assign(this, wsData.user);
+      this.inviteURL = `https://discordapp.com/oauth2/authorize?client_id=${this.id}&amp;scope=bot`;
+      this._handleOauth();
+      this._handleGuilds(wsData.guilds);
+      this.emit('ready');
+      break;
+    case 'MESSAGE_CREATE':
+      this.emit('message', new Message(wsData, this));
+      break;
+    case 'MESSAGE_REACTION_ADD':
+      let react = {
+        user_id: wsData.user_id,
+        chanel_id: wsData.channel_id,
+        message_id: wsData.message_id,
+        emoji: new Emoji(wsData.emoji)
+      };
+      this.emit('messageReactionAdd', react);
+      break;
+    case 'MESSAGE_REACTION_REMOVE':
+      let reactR = {
+        user_id: wsData.user_id,
+        channel_id: wsData.channel_id,
+        message_id: wsData.message_id,
+        emoji: new Emoji(wsData.emoji)
+      };
+      this.emit('messageReactionRemove', reactR);
+      break;
+    case 'MESSAGE_REACTION_REMOVE_ALL':
+      let reactRA = {
+        channel_id: wsData.channel_id,
+        message_id: wsData.message_id
+      };
+      this.emit('messageReactionRemoveAll', reactRA);
+      break;
+    case 'CHANNEL_CREATE':
+      wsData.guild_id ? 
+      this.servers[wsData.guild_id].channels[wsData.id] = new Channel(wsData) :
+      this.directMessages[wsData.id] = new Channel(wsData);
+      this.channels[wsData.id] = new Channel(wsData);
+      this.emit('channelCreate', new Channel(wsData));
+      break;
+    case 'CHANNEL_UPDATE':
+      wsData.guild_id ? 
+      this.servers[wsData.guild_id].channels[wsData.id] = new Channel(wsData) :
+      this.directMessages[wsData.id] = new Channel(wsData);
+      this.channels[wsData.id] = new Channel(wsData);
+      this.emit('channelUpdate', new Channel(wsData));
+      break;
+    case 'CHANNEL_DELETE':
+      delete this.servers[wsData.guild_id].channels[wsData.id];
+      delete this.channels[wsData.id];
+      this.emit('channelDelete', new Channel(wsData));
+      break;
+    case 'GUILD_CREATE':
+      this.servers[wsData.id] = new Server(wsData, this);
+      this.cacheOfflineUsers ? this._checkOfflineMembers(wsData.id) : '';
+      this.emit('guildCreate', this.servers[wsData.id]);
+      break;
+    case 'GUILD_DELETE':
+      if(wsData.unavailable)
+      {
+        this.servers[wsData.id] = new Server(wsData, this);
+        this.emit('guildUnavailable', new Server(wsData, this));
+      }
+      else
+      {
+        let deleted = this.servers[wsData.id];
+        this._handleGuildRemove(deleted.members);
+        delete this.servers[wsData.id];
+        this.emit('guildDelete', deleted);
+      } 
+      break;
+    case 'GUILD_ROLE_UPDATE':
+      this.servers[wsData.guild_id].roles.addRole(wsData.role, this);
+      this.emit('guildRoleUpdate', wsData);
+      break;
+    case 'GUILD_ROLE_CREATE':
+      this.servers[wsData.guild_id].roles.addRole(wsData.role, this);
+      this.emit('guildRoleCreate', wsData);
+      break;
+    case 'GUILD_ROLE_DELETE':
+      delete this.servers[wsData.guild_id].roles[wsData.role_id];
+      this.emit('guildRoleDelete', wsData);
+      break;
+    case 'GUILD_MEMBER_ADD':
+      this.servers[wsData.guild_id].members[wsData.user.id] = new Member(wsData);
+      this.servers[wsData.guild_id].member_count++;
+      this.users[wsData.user.id] ? this.users[wsData.user.id].referenceCount++ : this.users[wsData.user.id] = new User(wsData.user);
+      this.emit('guildMemberAdd', this.servers[wsData.guild_id].members[wsData.user.id]);
+      break;
+    case 'GUILD_MEMBER_REMOVE':
+      if(this.servers[wsData.guild_id])
+      {
+        delete(this.servers[wsData.guild_id].members[wsData.user.id]);
+        this.servers[wsData.guild_id].member_count --;
+        if(this.users[wsData.user.id])
+        {
+          this.users[wsData.user.id].referenceCount --;
+          if(this.users[wsData.user.id].referenceCount === 0)
+          {
+            delete(this.users[wsData.user.id]);
+          }
+        }
+      }
+      else
+      {
+        console.log(`Server ID: ${wsData.guild_id}, user ID: ${wsData.user.id}`);
+      }
+      this.emit('guildMemberRemove', wsData);
+      break;
+    case 'GUILD_MEMBER_UPDATE':
+      this.servers[wsData.guild_id].members[wsData.user.id].update(wsData, this);
+      this.emit('guildMemberUpdate', wsData);
+      break;
+    case 'GUILD_MEMBERS_CHUNK':
+      this._handleGuildChunk(wsData);
+      break;
+    }
+  }
+  _handleGuildRemove(members)
+  {
+    Object.keys(members).forEach((key) =>
+    {
+      if(this.users[key])
+      {
+        this.users[key].referenceCount --;
+        if(this.users[key].referenceCount === 0)
+        {
+          delete(this.users[key]);
+        }
+      }
+    });
+  }
+  /**
+   * Handles the chunk of users and will cache them appropriately in the guild and cached users
+   * @private
+   * @param {Object} chunk - Guild chunk from Discord docs 
+   */
+  _handleGuildChunk(chunk)
+  {
+    let server = this.servers[chunk.guild_id];
+    let users = this.users;
+    let userID;
+    let arrLen = chunk.members.length;
+    this.emit('debug', `${arrLen} Users in offline guild chunk`);
+    for(let i = 0; i &lt; arrLen; i ++)
+    {
+      userID = chunk.members[i].user.id;
+      if(!server.members[userID]) 
+      {
+        users[userID] ? users[userID].referenceCount++ : users[userID] = new User(chunk.members[i].user);
+        server.members[userID] = new Member(chunk.members[i]);
+      }
+    }
+  }
+  /**
+   * Gets the Oauth information associated with the bot
+   * @private
+   */
+  _handleOauth()
+  {
+    this._APIcall('get', this.ENDPOINTS.OAUTH).then((oauth) =>
+    {
+      this.internals.oauth = oauth.body;
+    }).catch((err) =>
+    {
+      emit('debug', err);
+    });
+  }
+    /**
+   * Internal helper for checking offline users, will check to see if you need ot check for offline members
+   * @private
+   * @param {String} serverID 
+   */
+  _checkOfflineMembers(serverID)
+  {
+    let server = this.servers[serverID];
+    server.members ? ((Object.keys(server.members).length !== server.member_count) &amp;&amp; server.large) ?
+      this._getOfflineMembers(serverID)
+      : ''
+      : '';
+  }
+  /**
+   * Internal helper for checking offline users, this sends the actual request
+   * @private
+   * @param {String} serverID 
+   */
+  _getOfflineMembers(serverID)
+  {
+    this._wsSend(this.PAYLOADS.REQUEST_OFFLINE_MEMBERS(serverID));
+  }
+  /**
+   * Handles the guilds from the READY payload
+   * @private
+   * @param {array} guildArr 
+   */
+  _handleGuilds(guildArr)
+  {
+    let arrLen = guildArr.length;
+    for(let i = 0; i &lt; arrLen; i++)
+    {
+      this.servers[guildArr[i].id] = new Server(guildArr[i]);
+    }
+  }
+    /**
+   * Handles the closing of the websocket connection
+   * @private
+   * @param {number} code - Error code 
+   * @param {object} data - Data provided
+   */
+  _handleWSClose(code, data)
+  {
+    let errMessage = CLOSE_CODES[code] !== undefined ? CLOSE_CODES[code].description : 'Unkown';
+    this.emit('debug', `Data in wsClose ${data}`);
+    //kill main keepalive loop
+    clearInterval(this._keepAlive);
+    if(this.DiscordWebSocket)
+    {
+      this.DiscordWebSocket.removeAllListeners('message');
+    }
+    
+    this.DiscordWebSocket = null;
+    if(code === (1006 || 1001))
+    {
+      this.emit('debug', `${code} in err check for _handleWSClose`);
+      return this.reconnect();
+    }
+    else if(code === 1000)
+    {
+      this.emit('debug', `${code} in err check for _handleWSClose`);
+      this.internals.sessionID = null;
+      return this.reconnect();
+    }
+
+    this.emit('disconnect', errMessage, code);
+  }
+  /**
+   * Handles any API call to Discord
+   * @private
+   * @param {string} method - Method to use 
+   * @param {string} url - URL for the API to use
+   * @returns {Promise&lt;object>} - Response from the API call
+   */
+  _APIcall(method, url)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      let data = arguments[2] !== undefined ? arguments[2] : undefined, req, callOptions;
+      callOptions = URL.parse(url);
+      callOptions.method = method.toUpperCase();
+      callOptions.headers = this._setHeaders();
+      callOptions.json = true;
+      callOptions.retries = 2;
+      if(data)
+      {
+        callOptions.body = data;
+        callOptions.headers['content-type'] = 'application/json';
+      }
+      console.log(`Route: ${url}`);
+      this.emit('debug', '~~~~sending~~~~');
+      got(url, callOptions).then((result) =>
+      {
+        this.emit('debug', '~~~~sent~~~~');
+        console.log(result.headers);
+        resolve(result);
+      }).catch((err) =>
+      {
+        reject(err);
+      });
+    });
+  }
+  /**
+   * Handles a payload from a websocket message
+   * @private
+   * @param {object} message - Payload from a websocket message
+   */
+  _processWS(message)
+  {
+    return message instanceof Buffer ? JSON.parse(Zlib.inflateSync(message).toString()) : JSON.parse(message);
+  }
+  /**
+   * Sends data through the websocket
+   * @private
+   * @param {object} data - Data to send 
+   */
+  _wsSend(data)
+  {
+    this.emit('debug', `DATA IN SEND ${JSON.stringify(data)}`);
+    if(this.DiscordWebSocket &amp;&amp; this.DiscordWebSocket.readyState === 1)
+    {
+      this.DiscordWebSocket.send(JSON.stringify(data));
+    }
+  }
+  /**
+   * Decides whether or not to resume or identify to Discord
+   * @private
+   */
+  _handleIdentify()
+  {
+    let PAYLOADS = this.PAYLOADS;
+    let internals = this.internals;
+  
+    this.emit('debug', `In _handleIdentify ${JSON.stringify(internals.sessionID ? PAYLOADS.RESUME : PAYLOADS.IDENTIFY)}`);
+    return this._wsSend(internals.sessionID ? PAYLOADS.RESUME : PAYLOADS.IDENTIFY);
+  }
+  /**
+   * Sets the directMessages of the client
+   * @private
+   * @param {array} DMArray - Arrays of DMs to set
+   */
+  _setDirectMessages(DMArray)
+  {
+    for(let i = 0; i &lt; DMArray.length; i++)
+    {
+      this.directMessages[[DMArray[i]].id] = new Channel();
+    }
+  }
+  /**
+   * Handles connecting to Discord via websocket
+   */
+  connect()
+  {
+    this._getGatewayInfo().then((gateway) =>
+    {
+      this.emit('debug', gateway);
+      this.internals.gateway = gateway;
+      this._connect(gateway);
+    }).catch((err) =>
+    {
+      this.reconnect();
+      return this.emit('debug', 'Error getting gateway: ' + err);
+    });
+  }
+  /**
+   * Handles reconnecting to the websocket (this is what should be called in the client if you want to reconnect)
+   */
+  reconnect()
+  {
+    setTimeout(() =>
+    {
+      if(!this.DiscordWebSocket)
+      {
+        setTimeout(() => {this.connect();}, 3000);
+      }
+      else
+      {
+        this._handleWSClose(1006);
+      }
+    },8000);
+
+  }
+  /**
+   * Sets the presence of the bot
+   */
+  setPresence(presence)
+  {
+    let currentPresence = this.lastPresence;
+    let _wsSend = this._wsSend.bind(this);
+    let PAYLOADS = this.PAYLOADS;
+    return new Promise((resolve, reject) =>
+    {
+      currentPresence.game = {
+        name: presence.game.name ? presence.game.name : reject('The object needs a name member.'),
+        type: presence.game.type ? presence.game.type : 0,
+        url: presence.game.url || null
+      };
+      currentPresence.status = presence.status !== undefined ? this._checkStatus(presence.status) : 'online';
+      currentPresence.since = typeof(presence.since) === 'number' ? presence.since : null;
+      _wsSend(PAYLOADS.STATUS(currentPresence));
+      resolve(true);
+    });
+  }
+  /**
    * Initializes some internals and creates the payloads to send to Discord
    * @private
    */
@@ -350,7 +717,7 @@ class Client extends EventEmitter
           d: {
             status: typeof(statusObj.idle_since) === 'number' ? 'idle' : statusObj.status !== undefined ? statusObj.status : null,
             afk: statusObj.afk !== null ? statusObj.afk : false,
-            since: typeof(statusObj.idle_since) === 'number' || statusObj.status === 'idle' ? Date.now() : null,
+            since: typeof(statusObj.since) === 'number' ? Date.now() : null,
             game: typeof(statusObj.game) === 'object' ?
             {
               name: statusObj.game.name ? String(statusObj.game.name) : null,
@@ -405,187 +772,6 @@ class Client extends EventEmitter
     };
   }
   /**
-   * Handles the payloads from the websocket connection
-   * @private
-   * @param {object} data - payload from the websocket connection 
-   */
-  _handleWS(data)
-  {
-    let wsPayload = this._processWS(data);
-    //debug
-    this.emit('debug', `wsPayload in _handleWS ${JSON.stringify(wsPayload)}`);
-    let wsData = wsPayload.d;
-    wsPayload.op !== 11 ? this.internals.sequence = wsPayload.s : '';
-
-    switch(wsPayload.op)
-    {
-    case 10:
-      this._handleIdentify();
-      this.internals.trace = wsData._trace;
-      this._keepAlive = setInterval(() =>
-      {
-        this.internals._lastHB = Date.now();
-        this._wsSend(this.PAYLOADS.HEARTBEAT());
-      }, wsData.heartbeat_interval);
-      break;
-    case 11:
-      this.ping = (Date.now() - this.internals._lastHB);
-      //debug
-      this.emit('debug', `IN HB: ~~~~ ${Date.now() - this.internals._lastHB}`);
-      break;
-    case 9:
-      !wsData ? this.internals.sessionID = null : '';
-      this._handleWSClose(1006);
-      break;
-    case 7:
-      this._handleWSClose(1006);
-      break;
-    }
-
-    this.emit('any', wsPayload);
-    switch(wsPayload.t)
-    {
-    case 'READY':
-      //debug
-      this.emit('debug', `READY YEEEE ${JSON.stringify(wsPayload.t)}`);
-      this.internals.sessionID = wsData.session_id;
-      Object.assign(this, wsData.user);
-      this.inviteURL = `https://discordapp.com/oauth2/authorize?client_id=${this.id}&amp;scope=bot`;
-      this._handleOauth();
-      this._handleGuilds(wsData.guilds);
-      this.emit('ready');
-      break;
-    case 'MESSAGE_CREATE':
-      this.emit('message', new Message(wsData, this));
-      break;
-    case 'CHANNEL_CREATE':
-      wsData.guild_id ? 
-      this.servers[wsData.guild_id].channels[wsData.id] = new Channel(wsData) :
-      this.directMessages[wsData.id] = new Channel(wsData);
-      this.channels[wsData.id] = new Channel(wsData);
-      this.emit('channelCreate', new Channel(wsData));
-      break;
-    case 'CHANNEL_UPDATE':
-      wsData.guild_id ? 
-      this.servers[wsData.guild_id].channels[wsData.id] = new Channel(wsData) :
-      this.directMessages[wsData.id] = new Channel(wsData);
-      this.channels[wsData.id] = new Channel(wsData);
-      this.emit('channelUpdate', new Channel(wsData));
-      break;
-    case 'CHANNEL_DELETE':
-      delete this.servers[wsData.guild_id].channels[wsData.id];
-      delete this.channels[wsData.id];
-      this.emit('channelDelete', new Channel(wsData));
-      break;
-    case 'GUILD_CREATE':
-      this.servers[wsData.id] = new Server(wsData, this);
-      this.cacheOfflineUsers ? this._checkOfflineMembers(wsData.id) : '';
-      this.emit('guildCreate', this.servers[wsData.id]);
-      break;
-    case 'GUILD_DELETE':
-      if(wsData.unavailable)
-      {
-        this.servers[wsData.id] = new Server(wsData, this);
-        this.emit('guildUnavailable', new Server(wsData, this));
-      }
-      else
-      {
-        let deleted = this.servers[wsData.id];
-        this._handleGuildRemove(deleted.members);
-        delete this.servers[wsData.id];
-        this.emit('guildDelete', deleted);
-      } 
-      break;
-    case 'GUILD_ROLE_UPDATE':
-      this.servers[wsData.guild_id].roles[wsData.role.id] = wsData.role;
-      this.emit('roleUpdate', wsData);
-      break;
-    case 'GUILD_MEMBER_ADD':
-      this.servers[wsData.guild_id].members[wsData.user.id] = new Member(wsData);
-      this.servers[wsData.guild_id].member_count++;
-      this.users[wsData.user.id] ? this.users[wsData.user.id].referenceCount++ : this.users[wsData.user.id] = new User(wsData.user);
-      this.emit('guildMemberAdd', this.servers[wsData.guild_id].members[wsData.user.id]);
-      break;
-    case 'GUILD_MEMBER_REMOVE':
-      if(this.servers[wsData.guild_id])
-      {
-        delete(this.servers[wsData.guild_id].members[wsData.user.id]);
-        this.servers[wsData.guild_id].member_count --;
-        if(this.users[wsData.user.id])
-        {
-          this.users[wsData.user.id].referenceCount --;
-          if(this.users[wsData.user.id].referenceCount === 0)
-          {
-            delete(this.users[wsData.user.id]);
-          }
-        }
-      }
-      else
-      {
-        console.log(`Server ID: ${wsData.guild_id}, user ID: ${wsData.user.id}`);
-      }
-      this.emit('guildMemberRemove', wsData);
-      break;
-    case 'GUILD_MEMBER_UPDATE':
-      this.servers[wsData.guild_id].members[wsData.user.id].update(wsData, this);
-      this.emit('guildMemberUpdate', wsData);
-      break;
-    case 'GUILD_MEMBERS_CHUNK':
-      this._handleGuildChunk(wsData);
-      break;
-    }
-  }
-  _handleGuildRemove(members)
-  {
-    Object.keys(members).forEach((key) =>
-    {
-      if(this.users[key])
-      {
-        this.users[key].referenceCount --;
-        if(this.users[key].referenceCount === 0)
-        {
-          delete(this.users[key]);
-        }
-      }
-    })
-  }
-  /**
-   * Handles the chunk of users and will cache them appropriately in the guild and cached users
-   * @private
-   * @param {Object} chunk - Guild chunk from Discord docs 
-   */
-  _handleGuildChunk(chunk)
-  {
-    let server = this.servers[chunk.guild_id];
-    let users = this.users;
-    let userID;
-    let arrLen = chunk.members.length;
-    this.emit('debug', `${arrLen} Users in offline guild chunk`);
-    for(let i = 0; i &lt; arrLen; i ++)
-    {
-      userID = chunk.members[i].user.id;
-      if(!server.members[userID]) 
-      {
-        users[userID] ? users[userID].referenceCount++ : users[userID] = new User(chunk.members[i].user);
-        server.members[userID] = new Member(chunk.members[i]);
-      }
-    }
-  }
-  /**
-   * Gets the Oauth information associated with the bot
-   * @private
-   */
-  _handleOauth()
-  {
-    this._APIcall('get', this.ENDPOINTS.OAUTH).then((oauth) =>
-    {
-      this.internals.oauth = oauth;
-    }).catch((err) =>
-    {
-      emit('debug', err);
-    });
-  }
-  /**
    * Sends a message to a specified channel
    * @param {string} channelID - ID of the channel you want to send a message to
    * @param {string|object} message - Can be either a string or an object
@@ -618,6 +804,35 @@ class Client extends EventEmitter
     }); 
   }
   /**
+   * Edits the info about he bot.
+   * @param {Object} info - New User object to set the bot to. 
+   */
+  editInfo(info)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      let infoObj = {
+        avatar: info.avatar ? `data:image/jpg;base64,${info.avatar}` : this.avatar,
+        username: info.username ? info.username : this.username
+      };
+      this._APIcall('patch', this.ENDPOINTS.ME, infoObj).then((result) =>
+      {
+        let updatedUser = result.body;
+        this.username === updatedUser.username ? '' : this.username = updatedUser.username;
+        this.discriminator === updatedUser.discriminator ? '' : this.discriminator = updatedUser.discriminator;
+        this.avatar === updatedUser.avatar ? '' : this.avatar = updatedUser.avatar;
+      }).catch(reject);
+    });
+  }
+  /**
+   * Gets the generic invite link for the bot.
+   * @returns {String} Invite link for the bot (with no added permissions)
+   */
+  getBotInvite()
+  {
+    return `https://discordapp.com/oauth2/authorize?client_id=${this.id}&amp;scope=bot`;
+  }
+  /**
    * This will go through all of the servers and decide if there are members that are offline, but not in cache
    * It will request offline users for the servers that aren't caught up yet
    * This will set a short timeout per request sent
@@ -634,152 +849,6 @@ class Client extends EventEmitter
       : ''
       : '';
     });
-  }
-  /**
-   * Internal helper for checking offline users, will check to see if you need ot check for offline members
-   * @private
-   * @param {String} serverID 
-   */
-  _checkOfflineMembers(serverID)
-  {
-    let server = this.servers[serverID];
-    server.members ? ((Object.keys(server.members).length !== server.member_count) &amp;&amp; server.large) ?
-      this._getOfflineMembers(serverID)
-      : ''
-      : '';
-  }
-  /**
-   * Internal helper for checking offline users, this sends the actual request
-   * @private
-   * @param {String} serverID 
-   */
-  _getOfflineMembers(serverID)
-  {
-    this._wsSend(this.PAYLOADS.REQUEST_OFFLINE_MEMBERS(serverID));
-  }
-  /**
-   * Handles the guilds from the READY payload
-   * @private
-   * @param {array} guildArr 
-   */
-  _handleGuilds(guildArr)
-  {
-    let arrLen = guildArr.length;
-    for(let i = 0; i &lt; arrLen; i++)
-    {
-      this.servers[guildArr[i].id] = new Server(guildArr[i]);
-    }
-  }
-  /**
-   * Handles the closing of the websocket connection
-   * @private
-   * @param {number} code - Error code 
-   * @param {object} data - Data provided
-   */
-  _handleWSClose(code, data)
-  {
-    let errMessage = CLOSE_CODES[code] !== undefined ? CLOSE_CODES[code].description : 'Unkown';
-    this.emit('debug', `Data in wsClose ${data}`);
-    //kill main keepalive loop
-    clearInterval(this._keepAlive);
-    if(this.DiscordWebSocket)
-    {
-      this.DiscordWebSocket.removeAllListeners('message');
-    }
-    
-    this.DiscordWebSocket = null;
-    if(code === (1006 || 1001))
-    {
-      this.emit('debug', `${code} in err check for _handleWSClose`);
-      return this.reconnect();
-    }
-    else if(code === 1000)
-    {
-      this.emit('debug', `${code} in err check for _handleWSClose`);
-      this.internals.sessionID = null;
-      return this.reconnect();
-    }
-
-    this.emit('disconnect', errMessage, code);
-  }
-  /**
-   * Handles any API call to Discord
-   * @private
-   * @param {string} method - Method to use 
-   * @param {string} url - URL for the API to use
-   * @returns {Promise&lt;object>} - Response from the API call
-   */
-  _APIcall(method, url)
-  {
-    return new Promise((resolve, reject) =>
-    {
-      let data = arguments[2] !== undefined ? arguments[2] : undefined, req, callOptions;
-      callOptions = URL.parse(url);
-      callOptions.method = method.toUpperCase();
-      callOptions.headers = this._setHeaders();
-      callOptions.json = true;
-      callOptions.retries = 2;
-      if(data)
-      {
-        callOptions.body = data;
-        callOptions.headers['content-type'] = 'application/json';
-      }
-      this.emit('debug', '~~~~sending~~~~');
-      got(url, callOptions).then((result) =>
-      {
-        this.emit('debug', '~~~~sent~~~~');
-        resolve(result);
-      }).catch((err) =>
-      {
-        reject(err);
-      });
-    });
-  }
-  /**
-   * Handles a payload from a websocket message
-   * @private
-   * @param {object} message - Payload from a websocket message
-   */
-  _processWS(message)
-  {
-    return message instanceof Buffer ? JSON.parse(Zlib.inflateSync(message).toString()) : JSON.parse(message);
-  }
-  /**
-   * Sends data through the websocket
-   * @private
-   * @param {object} data - Data to send 
-   */
-  _wsSend(data)
-  {
-    this.emit('debug', `DATA IN SEND ${JSON.stringify(data)}`);
-    if(this.DiscordWebSocket &amp;&amp; this.DiscordWebSocket.readyState === 1)
-    {
-      this.DiscordWebSocket.send(JSON.stringify(data));
-    }
-  }
-  /**
-   * Decides whether or not to resume or identify to Discord
-   * @private
-   */
-  _handleIdentify()
-  {
-    let PAYLOADS = this.PAYLOADS;
-    let internals = this.internals;
-  
-    this.emit('debug', `In _handleIdentify ${JSON.stringify(internals.sessionID ? PAYLOADS.RESUME : PAYLOADS.IDENTIFY)}`);
-    return this._wsSend(internals.sessionID ? PAYLOADS.RESUME : PAYLOADS.IDENTIFY);
-  }
-  /**
-   * Sets the directMessages of the client
-   * @private
-   * @param {array} DMArray - Arrays of DMs to set
-   */
-  _setDirectMessages(DMArray)
-  {
-    for(let i = 0; i &lt; DMArray.length; i++)
-    {
-      this.directMessages[[DMArray[i]].id] = new Channel();
-    }
   }
 }
 /**
@@ -823,9 +892,31 @@ class Server extends Base
   constructor(data, client)
   {
     super(data);
-    data.roles ? this.roles  = new Roles(data.roles): '';
+    data.roles ? this.roles  = new Roles(data.roles, client): '';
     data.members ? this.members = new Members(data.members, client) : '';
     data.channels ? this.channels = new Channels(data.channels, client, this.id) : '';
+    Object.defineProperty(this, '_client',{enumerable: false, value: client});
+  }
+  /**
+   * Creates a new role on the server
+   * @param {Object} [roleData] Data for a role
+   * @param {string} [roleData.name='new role'] Name of the role
+   * @param {int} [roleData.permissions] Permissions to set for the role, defaults to "@everyone permissions of server"
+   * @param {color} [roleData.color=0] RGB color value for the role
+   * @param {boolean} [roleData.hoist=false] Whether or not the role is shown separately on the member list
+   * @param {boolean} [roleData.mentionable=false] Whether or not the role is mentionable
+   * @example
+   * server.addRole({name:'Example role', hoist: true, color: 13395711});
+   */
+  addRole(roleData)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      return this._client._APIcall('post', this._client.ENDPOINTS.ROLES(this.id),roleData ? roleData : {}).then((result) =>
+      {
+        resolve(result);
+      }).catch(reject);
+    });
   }
   /**
    * Updates a Server based on information receieved from the websocket
@@ -887,6 +978,10 @@ class Members
   {
     this[data[i].user.id] = new Member(data[i]);
   }
+  get [Symbol.toStringTag]()
+  {
+    return 'Members';
+  }
 }
 /**
  * Contains information pertaining to a member of a server
@@ -914,6 +1009,11 @@ class Member
     this.id = data.user.id;
     this.username = data.user.username;
     this.discriminator = data.user.discriminator;
+    this.bot = data.user.bot ? true : false;
+  }
+  get [Symbol.toStringTag]()
+  {
+    return 'Member';
   }
 }
 /**
@@ -929,6 +1029,10 @@ class Channel extends Base
     data.recipients ? this.recipients = data.recipients : '';
     guild_id ? this.guild_id = guild_id : '';
   }
+  get [Symbol.toStringTag]()
+  {
+    return 'Channel';
+  }
 }
 class Channels
 {
@@ -941,17 +1045,46 @@ class Channels
       client.channels[data[i].id] = new Channel(data[i], guild_id);
     }
   }
+  get [Symbol.toStringTag]()
+  {
+    return 'Channels';
+  }
 }
 class Roles
 {
-  constructor(data)
+  constructor(data, client)
   {
     let len = data.length;
     for(let i = 0; i &lt; len; i ++)
     {
-      this[data[i].id] = data[i];
+      this[data[i].id] = new Role(data[i], client);
     }
   }
+  addRole(data, client)
+  {
+    this[data.id] = new Role(data.id, client);
+  }
+  get [Symbol.toStringTag]()
+  {
+    return 'Roles';
+  }
+}
+/**
+ * Contains everything pertaining to a Role
+ * @param {Object} roleData Raw role data from the websocket
+ */
+class Role
+{
+  constructor(roleData, client)
+  {
+    Object.assign(this, roleData);
+    Object.defineProperty(this, '_client',{enumerable: false, value: client});
+  }
+  get [Symbol.toStringTag]()
+  {
+    return 'Role';
+  }
+
 }
 /**
  * Contains everything pertaining to a User
@@ -969,6 +1102,10 @@ class User
      */
     this.referenceCount = 1;
   }
+  get [Symbol.toStringTag]()
+  {
+    return 'User';
+  }
 }
 /**
  * Contains everything pertaining to a message
@@ -980,7 +1117,7 @@ class Message
   constructor(data, client)
   {
     Object.assign(this, data);
-    this._client = client;
+    Object.defineProperty(this, '_client',{enumerable: false, value: client});
   }
   /**
    * Edits a message to have the desired content
@@ -997,13 +1134,116 @@ class Message
       };
       return this._client._APIcall('patch', this._client.ENDPOINTS.MESSAGES(this.channel_id, this.id), newContent).then((result) =>
       {
-        resolve(result);
+        resolve(result.body);
       }).catch(reject);
     });
   }
+  /**
+   * Reacts with an emoji
+   * @param {Object} emoji Either an object with the emoji name and ID as props or just an emoji symbol as a string
+   * @returns {Promise&lt;Object>} 
+   */
+  react(emoji)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      return this._client._APIcall('put', this._client.ENDPOINTS.USER_REACTIONS(this.channel_id, this.id, encodeURIComponent(new Emoji(emoji).toString()))).then((result) =>
+      {
+        resolve(result.body);
+      }).catch(reject); 
+    });
+  }
+  /**
+   * Cancel's the bots own reaction.
+   * @param {Object | String} emoji Either an object with the emoji name and ID as props or just an emoji symbol as a string
+   * @returns {Promise&lt;Object>} 
+   */
+  cancelReact(emoji)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      return this._client._APIcall('delete', this._client.ENDPOINTS.USER_REACTIONS(this.channel_id, this.id, encodeURIComponent(new Emoji(emoji).toString()))).then((result) =>
+      {
+        resolve(result.body);
+      }).catch(reject); 
+    });
+  }
+  /**
+   * Deletes a user's reaction
+   * @param {Object | String} emoji 
+   * @param {String} userID 
+   * @returns {Promise&lt;Object>} 
+   */
+  deleteReact(emoji, userID)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      return this._client._APIcall('delete', this._client.ENDPOINTS.USER_REACTIONS(this.channel_id, this.id, encodeURIComponent(new Emoji(emoji).toString()), userID)).then((result) =>
+      {
+        resolve(result.body);
+      }).catch(reject); 
+    });
+  }
+  deleteReacts()
+  {
+    return new Promise((resolve, reject) =>
+    {
+      return this._client._APIcall('delete', this._client.ENDPOINTS.MESSAGE_REACTIONS(this.channel_id, this.id)).then((result) =>
+      {
+        resolve(result);
+      }).catch(reject); 
+    });
+  }
+  /**
+   * 
+   * @param {Object | String} emoji
+   * @returns {Promise&lt;Object>}
+   */
+  getReacts(emoji)
+  {
+    return new Promise((resolve, reject) =>
+    {
+      return this._client._APIcall('get', this._client.ENDPOINTS.MESSAGE_REACTIONS(this.channel_id, this.id, encodeURIComponent(new Emoji(emoji).toString()))).then((result) =>
+      {
+        resolve(result.body);
+      }).catch(reject); 
+    });
+  }
+  get [Symbol.toStringTag]()
+  {
+    return 'Message';
+  }
 }
-
-module.exports = Client;</code></pre>
+/**
+ * Emoji class represents an emoji
+ * @param {Object | String} emoji Either an object with the emoji name and ID as props or just an emoji symbol as a string
+ */
+class Emoji
+{
+  constructor(emoji)
+  {
+    if(typeof(emoji) === 'object')
+    {
+      this.name = emoji.name;
+      this.id = emoji.id ? emoji.id : null;
+    }
+    else
+    {
+      this.name = emoji;
+      this.id = null;
+    }
+  }
+  toString()
+  {
+    return `${this.name}${this.id ? ':' + this.id : ''}`;
+  }
+  get [Symbol.toStringTag]()
+  {
+    return 'Emoji';
+  }
+}
+module.exports = Client;
+</code></pre>
         </article>
     </section>
 
@@ -1015,7 +1255,7 @@ module.exports = Client;</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Oct 23 2017 18:07:12 GMT-0400 (EDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jan 12 2018 11:48:04 GMT-0500 (Eastern Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

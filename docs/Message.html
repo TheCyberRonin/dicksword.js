@@ -24,7 +24,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a></li><li><a href="Channel.html">Channel</a></li><li><a href="Client.html">Client</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="Client.html#cacheOfflineUsers">cacheOfflineUsers</a></li><li data-type='member'><a href="Client.html#channels">channels</a></li><li data-type='member'><a href="Client.html#internals">internals</a></li><li data-type='member'><a href="Client.html#servers">servers</a></li><li data-type='member'><a href="Client.html#users">users</a></li></ul><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#getAllOfflineMembers">getAllOfflineMembers</a></li><li data-type='method'><a href="Client.html#reconnect">reconnect</a></li><li data-type='method'><a href="Client.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="Client.html#setPresence">setPresence</a></li></ul></li><li><a href="Member.html">Member</a></li><li><a href="Members.html">Members</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Members.html#update">update</a></li></ul></li><li><a href="Message.html">Message</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Message.html#edit">edit</a></li></ul></li><li><a href="Server.html">Server</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Server.html#update">update</a></li></ul></li><li><a href="User.html">User</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="User.html#referenceCount">referenceCount</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Base.html">Base</a></li><li><a href="Channel.html">Channel</a></li><li><a href="Client.html">Client</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="Client.html#cacheOfflineUsers">cacheOfflineUsers</a></li><li data-type='member'><a href="Client.html#channels">channels</a></li><li data-type='member'><a href="Client.html#internals">internals</a></li><li data-type='member'><a href="Client.html#servers">servers</a></li><li data-type='member'><a href="Client.html#users">users</a></li></ul><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Client.html#connect">connect</a></li><li data-type='method'><a href="Client.html#editInfo">editInfo</a></li><li data-type='method'><a href="Client.html#getAllOfflineMembers">getAllOfflineMembers</a></li><li data-type='method'><a href="Client.html#getBotInvite">getBotInvite</a></li><li data-type='method'><a href="Client.html#reconnect">reconnect</a></li><li data-type='method'><a href="Client.html#sendMessage">sendMessage</a></li><li data-type='method'><a href="Client.html#setPresence">setPresence</a></li></ul></li><li><a href="Emoji.html">Emoji</a></li><li><a href="Member.html">Member</a></li><li><a href="Members.html">Members</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Members.html#update">update</a></li></ul></li><li><a href="Message.html">Message</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Message.html#cancelReact">cancelReact</a></li><li data-type='method'><a href="Message.html#deleteReact">deleteReact</a></li><li data-type='method'><a href="Message.html#edit">edit</a></li><li data-type='method'><a href="Message.html#getReacts">getReacts</a></li><li data-type='method'><a href="Message.html#react">react</a></li></ul></li><li><a href="Role.html">Role</a></li><li><a href="Server.html">Server</a><a class='button collapse'>Methods</a><ul class='methods'><li data-type='method'><a href="Server.html#addRole">addRole</a></li><li data-type='method'><a href="Server.html#update">update</a></li></ul></li><li><a href="User.html">User</a><a class='button collapse'>Members</a><ul class='members'><li data-type='member'><a href="User.html#referenceCount">referenceCount</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -71,7 +71,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line937">line 937</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line1074">line 1074</a>
     </li></ul></dd>
     
 
@@ -229,6 +229,337 @@
 
     
 
+    <h4 class="name" id="cancelReact"><span class="type-signature"></span>cancelReact<span class="signature">(emoji)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line1120">line 1120</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    Cancel's the bots own reaction.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>emoji</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Either an object with the emoji name and ID as props or just an emoji symbol as a string</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Object></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="deleteReact"><span class="type-signature"></span>deleteReact<span class="signature">(emoji, userID)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line1136">line 1136</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    Deletes a user's reaction
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>emoji</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userID</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Object></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+        
+            
+
+    
+
     <h4 class="name" id="edit"><span class="type-signature"></span>edit<span class="signature">(content)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span></h4>
 
     
@@ -241,7 +572,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line949">line 949</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line1086">line 1086</a>
     </li></ul></dd>
     
 
@@ -376,6 +707,307 @@
 
 
         
+            
+
+    
+
+    <h4 class="name" id="getReacts"><span class="type-signature"></span>getReacts<span class="signature">(emoji)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line1161">line 1161</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>emoji</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+|
+
+<span class="param-type">String</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Object></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="react"><span class="type-signature"></span>react<span class="signature">(emoji)</span><span class="type-signature"> &rarr; {Promise.&lt;Object>}</span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line1105">line 1105</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    Reacts with an emoji
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>emoji</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Either an object with the emoji name and ID as props or just an emoji symbol as a string</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl class="param-type">
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Object></span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+        
     
 
     
@@ -393,7 +1025,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Mon Oct 23 2017 18:07:12 GMT-0400 (EDT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Jan 12 2018 11:48:04 GMT-0500 (Eastern Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
